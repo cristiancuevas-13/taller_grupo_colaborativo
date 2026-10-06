@@ -1,0 +1,68 @@
+def ordenar_vuelos_por_ingreso(lista_vuelos):
+    """
+    Ordena la lista de vuelos de mayor a menor ingreso total.
+    """
+    return sorted(lista_vuelos, key=lambda x: x["ingreso_total"], reverse=True)
+
+def calcular_ingreso_global(lista_vuelos):
+    """
+    Suma el ingreso generado por todos los vuelos.
+    """
+    total = 0
+    for vuelo in lista_vuelos:
+        total += vuelo["ingreso_total"]
+    return total
+
+def generar_reporte(lista_vuelos, umbral_baja_ocupacion=50):
+    """
+    Procesa la información, ordena los vuelos y muestra el reporte final.
+    """
+    vuelos_procesados = []
+
+    # Procesar cada vuelo con las funciones del Ejercicio 1
+    for vuelo in lista_vuelos:
+        precio_final, ingreso_vuelo = calcular_ingreso_vuelo(vuelo["pasajeros"], vuelo["precio_original"])
+        
+      
+        baja_ocupacion = "Sí" if vuelo["pasajeros"] < umbral_baja_ocupacion else "No"
+        
+        vuelos_procesados.append({
+            "codigo": vuelo["codigo"],
+            "pasajeros": vuelo["pasajeros"],
+            "precio_original": vuelo["precio_original"],
+            "precio_final": precio_final,
+            "ingreso_total": ingreso_vuelo,
+            "baja_ocupacion": baja_ocupacion
+        })
+
+    # 1. Ordenar de mayor a menor ingreso
+    vuelos_ordenados = ordenar_vuelos_por_ingreso(vuelos_procesados)
+
+    # 2. Calcular ingreso total global
+    ingreso_global = calcular_ingreso_global(vuelos_ordenados)
+
+    # 3. Mostrar reporte final en pantalla
+    print("=" * 80)
+    print("                      REPORTE FINAL DE LA AEROLÍNEA                      ")
+    print("=" * 80)
+    print(f"{'Código':<10} | {'Pasajeros':<10} | {'P. Original':<12} | {'P. Final':<12} | {'Ingreso Vuelo':<14} | {'Baja Ocup.':<10}")
+    print("-" * 80)
+
+    for v in vuelos_ordenados:
+        print(f"{v['codigo']:<10} | {v['pasajeros']:<10} | ${v['precio_original']:<11.2f} | ${v['precio_final']:<11.2f} | ${v['ingreso_total']:<13.2f} | {v['baja_ocupacion']:<10}")
+
+    print("=" * 80)
+    print(f"INGRESO TOTAL GLOBAL DE LA AEROLÍNEA: ${ingreso_global:,.2f}")
+    print("=" * 80)
+
+
+
+datos_vuelos = [
+    {"codigo": "AV101", "pasajeros": 120, "precio_original": 600},
+    {"codigo": "AV102", "pasajeros": 35,  "precio_original": 450},
+    {"codigo": "AV103", "pasajeros": 80,  "precio_original": 550},
+    {"codigo": "AV104", "pasajeros": 25,  "precio_original": 700},
+]
+
+
+generar_reporte(datos_vuelos)
